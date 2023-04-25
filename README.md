@@ -1,102 +1,101 @@
 # 09_02_ASSI_function_procedure_cursor_trigger
+### Belén Gamero Garcia y Edgar López Hernández
 
+## Crear un proyecto en pgAdmin con PostgreSQL
 
+1. Crear una base de datos:
 
-Para crear un proyecto de PostgreSQL con una función, un procedimiento, un cursor y un trigger, podemos seguir los siguientes pasos:
-
-1. Crear una base de datos en PostgreSQL:
-
-```SQL
-CREATE DATABASE proyecto_postgresql;
+```
+CREATE DATABASE nombre_de_tu_base_de_datos;
 ```
 
-2. Conectarse a la base de datos:
+2. Cree una tabla para almacenar los datos:
 
-```SQL
-\c proyecto_postgresql;
 ```
-
-3. Crear una tabla llamada "ventas" para nuestro proyecto:
-
-```SQL
-CREATE TABLE ventas (
-    id SERIAL PRIMARY KEY,
-    producto VARCHAR(50),
-    cantidad INTEGER,
-    precio NUMERIC(10,2),
-    fecha DATE
+CREATE TABLE usuarios (
+  id SERIAL PRIMARY KEY,
+  nombre VARCHAR(50),
+  correo_electronico VARCHAR(50),
+  edad INTEGER
 );
 ```
 
-4. Insertar algunos datos de muestra en la tabla "ventas":
+3. Cree una función que calcule la edad promedio de los usuarios de la tabla:
 
-```SQL
-INSERT INTO ventas (producto, cantidad, precio, fecha) VALUES
-    ('Producto A', 10, 100.50, '2022-01-01'),
-    ('Producto B', 5, 50.25, '2022-01-02'),
-    ('Producto C', 20, 10.75, '2022-01-03');
 ```
-
-5. Crear una función llamada "calcular_total" que calcule el total de ventas por producto:
-
-```SQL
-CREATE OR REPLACE FUNCTION calcular_total() RETURNS TABLE (
-    producto VARCHAR(50),
-    total NUMERIC(10,2)
-) AS $$
-BEGIN
-    RETURN QUERY SELECT producto, SUM(cantidad * precio) AS total FROM ventas GROUP BY producto;
-END;
-$$ LANGUAGE plpgsql;
-```
-
-6. Crear un procedimiento llamado "insertar_venta" que inserte una nueva venta en la tabla "ventas":
-
-```SQL
-CREATE OR REPLACE PROCEDURE insertar_venta(
-    p_producto VARCHAR(50),
-    p_cantidad INTEGER,
-    p_precio NUMERIC(10,2),
-    p_fecha DATE
-) AS $$
-BEGIN
-    INSERT INTO ventas (producto, cantidad, precio, fecha) VALUES (p_producto, p_cantidad, p_precio, p_fecha);
-END;
-$$ LANGUAGE plpgsql;
-```
-
-7. Crear un cursor llamado "ventas_cursor" que recorra todas las ventas y las muestre por pantalla:
-
-```SQL
-CREATE OR REPLACE FUNCTION mostrar_ventas() RETURNS VOID AS $$
+CREATE FUNCTION calcular_edad_promedio()
+RETURNS INTEGER AS $$
 DECLARE
-    r_venta ventas%ROWTYPE;
-    c_ventas CURSOR FOR SELECT * FROM ventas;
+  edad_promedio INTEGER;
 BEGIN
-    OPEN c_ventas;
-    LOOP
-        FETCH c_ventas INTO r_venta;
-        EXIT WHEN NOT FOUND;
-        RAISE NOTICE 'Venta #%: Producto: %, Cantidad: %, Precio: %, Fecha: %', r_venta.id, r_venta.producto, r_venta.cantidad, r_venta.precio, r_venta.fecha;
-    END LOOP;
-    CLOSE c_ventas;
+  SELECT AVG(edad) INTO edad_promedio FROM usuarios;
+  RETURN edad_promedio;
 END;
 $$ LANGUAGE plpgsql;
 ```
 
-8. Crear un trigger llamado "actualizar_total" que se active cada vez que se inserte o actualice una venta, y actualice el total de ventas por producto en una tabla llamada "totales_ventas":
+4. Cree un procedimiento almacenado que inserte un nuevo usuario en la tabla:
 
-```SQL
-CREATE OR REPLACE FUNCTION actualizar_total() RETURNS TRIGGER AS $$
+```
+CREATE PROCEDURE insertar_usuario(nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
+AS $$
 BEGIN
-    DELETE FROM totales_ventas WHERE producto = NEW.producto;
-    INSERT INTO totales_ventas (producto, total) SELECT producto, SUM(cantidad * precio) AS total FROM ventas WHERE producto = NEW.producto GROUP BY producto;
-    RETURN NULL;
+  INSERT INTO usuarios (nombre, correo_electronico, edad) VALUES (nombre, correo_electronico, edad);
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE TRIGGER actualizar_total AFTER INSERT OR UPDATE ON ventas FOR EACH ROW EXECUTE FUNCTION actualizar_total();
 ```
 
-Con estos pasos, hemos creado un proyecto de PostgreSQL que incluye una función, un procedimiento, un cursor y un trigger que nos permiten gestionar ventas y calcular el total de ventas por producto.
+5. Cree un cursor que recorra todos los usuarios de la tabla y los muestre:
+
+```
+CREATE OR REPLACE FUNCTION mostrar_usuarios()
+RETURNS VOID AS $$
+DECLARE
+  usuario usuarios%ROWTYPE;
+  cursor_usuarios CURSOR FOR SELECT * FROM usuarios;
+BEGIN
+  OPEN cursor_usuarios;
+  LOOP
+    FETCH cursor_usuarios INTO usuario;
+    EXIT WHEN NOT FOUND;
+    RAISE NOTICE 'Usuario %: %, % años', usuario.id, usuario.nombre, usuario.edad;
+  END LOOP;
+  CLOSE cursor_usuarios;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+6. Cree un trigger que se active cada vez que se inserte un nuevo usuario en la tabla y muestre un mensaje en la consola:
+
+```
+CREATE TRIGGER mostrar_mensaje AFTER INSERT ON usuarios
+FOR EACH ROW
+EXECUTE FUNCTION mostrar_mensaje();
+```
+## Prueba
+Para probar todo lo enterior utilize los siguientes comandos:
+
+- Para llamar a la función de calcular la edad promedio de los usuarios:
+
+```
+SELECT calcular_edad_promedio();
+```
+
+- Para llamar al procedimiento almacenado de insertar un nuevo usuario:
+
+```
+CALL insertar_usuario('Juan', 'juan@example.com', 30);
+```
+
+- Para llamar al cursor de mostrar todos los usuarios:
+
+```
+SELECT mostrar_usuarios();
+```
+
+- Para insertar un nuevo usuario y activar el trigger:
+
+```
+INSERT INTO usuarios (nombre, correo_electronico, edad) VALUES ('Pedro', 'pedro@example.com', 25);
+```
 
