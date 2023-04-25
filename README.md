@@ -6,7 +6,7 @@
 1. Crear una base de datos:
 
 ```
-CREATE DATABASE nombre_de_tu_base_de_datos;
+CREATE DATABASE DB;
 ```
 
 2. Cree una tabla para almacenar los datos:
@@ -20,8 +20,28 @@ CREATE TABLE usuarios (
 );
 ```
 
-3. Cree una función que calcule la edad promedio de los usuarios de la tabla:
+![image](https://user-images.githubusercontent.com/91567318/234351027-89ced80f-d8b9-46c4-b681-6aa8810fc8be.png)
 
+
+3. Introduzca los datos de los usuarios de la tabla anterior:
+
+```
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (1, 'Juan', 'juan@example.com', 30);
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (2, 'Ana', 'ana@example.com', 25);
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (3, 'Pedro', 'pedro@example.com', 35);
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (4, 'María', 'maria@example.com', 28);
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (5, 'Luis', 'luis@example.com', 32);
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (6, 'Sofía', 'sofia@example.com', 21);
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (7, 'Daniel', 'daniel@example.com', 27);
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (8, 'Carla', 'carla@example.com', 29);
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (9, 'Andrés', 'andres@example.com', 31);
+INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (10, 'Marta', 'marta@example.com', 26);
+
+```
+
+![image](https://user-images.githubusercontent.com/91567318/234353750-1a40cc6f-3469-42e2-ab7e-bf97cf0bf06e.png)
+
+4. Cree una función que calcule la edad promedio de los usuarios de la tabla:
 ```
 CREATE FUNCTION calcular_edad_promedio()
 RETURNS INTEGER AS $$
@@ -34,7 +54,10 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-4. Cree un procedimiento almacenado que inserte un nuevo usuario en la tabla:
+![image](https://user-images.githubusercontent.com/91567318/234351671-642f4519-6cf4-443d-b325-6dccdcdc4425.png)
+
+
+5. Cree un procedimiento almacenado que inserte un nuevo usuario en la tabla:
 
 ```
 CREATE PROCEDURE insertar_usuario(nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
@@ -45,7 +68,10 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-5. Cree un cursor que recorra todos los usuarios de la tabla y los muestre:
+![image](https://user-images.githubusercontent.com/91567318/234351594-1e569d09-6644-4bcd-bbd9-7a23d2e54aa7.png)
+
+
+6. Cree un cursor que recorra todos los usuarios de la tabla y los muestre:
 
 ```
 CREATE OR REPLACE FUNCTION mostrar_usuarios()
@@ -65,13 +91,28 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-6. Cree un trigger que se active cada vez que se inserte un nuevo usuario en la tabla y muestre un mensaje en la consola:
+![image](https://user-images.githubusercontent.com/91567318/234351782-4dc7e720-476a-44ff-85c6-243d81abd609.png)
+
+
+7. Cree un trigger que se active cada vez que se inserte un nuevo usuario en la tabla y muestre un mensaje en la consola:
 
 ```
-CREATE TRIGGER mostrar_mensaje AFTER INSERT ON usuarios
-FOR EACH ROW
+CREATE OR REPLACE FUNCTION mostrar_mensaje() 
+RETURNS TRIGGER AS $$
+BEGIN
+  RAISE NOTICE 'Se ha insertado un nuevo usuario con id %', NEW.id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER nuevo_usuario 
+AFTER INSERT ON usuarios 
+FOR EACH ROW 
 EXECUTE FUNCTION mostrar_mensaje();
 ```
+![image](https://user-images.githubusercontent.com/91567318/234352653-4b91b143-dfc5-473e-adf3-4f9849ed5eec.png)
+
+
 ## Prueba
 Para probar todo lo enterior utilize los siguientes comandos:
 
@@ -80,6 +121,9 @@ Para probar todo lo enterior utilize los siguientes comandos:
 ```
 SELECT calcular_edad_promedio();
 ```
+
+![image](https://user-images.githubusercontent.com/91567318/234354010-c9999bc0-a737-43e1-a9c5-19c10afd1cc1.png)
+
 
 - Para llamar al procedimiento almacenado de insertar un nuevo usuario:
 
@@ -98,4 +142,8 @@ SELECT mostrar_usuarios();
 ```
 INSERT INTO usuarios (nombre, correo_electronico, edad) VALUES ('Pedro', 'pedro@example.com', 25);
 ```
+
+![image](https://user-images.githubusercontent.com/91567318/234355537-ae7d80e6-59cb-4f02-ad9b-1af84f5d348f.png)
+
+
 
