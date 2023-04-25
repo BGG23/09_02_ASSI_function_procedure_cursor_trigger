@@ -41,6 +41,7 @@ INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (10, 'Marta',
 
 ![image](https://user-images.githubusercontent.com/91567318/234353750-1a40cc6f-3469-42e2-ab7e-bf97cf0bf06e.png)
 
+
 4. Cree una función que calcule la edad promedio de los usuarios de la tabla:
 ```
 CREATE FUNCTION calcular_edad_promedio()
