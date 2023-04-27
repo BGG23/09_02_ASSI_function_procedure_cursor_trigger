@@ -112,32 +112,3 @@ FOR EACH ROW
 EXECUTE FUNCTION mostrar_mensaje();
 ```
 ![image](https://user-images.githubusercontent.com/91567318/234352653-4b91b143-dfc5-473e-adf3-4f9849ed5eec.png)
-
-
-## Prueba
-Para probar todo lo enterior utilize los siguientes comandos:
-
-- Para llamar a la función de calcular la edad promedio de los usuarios:
-
-```
-SELECT calcular_edad_promedio();
-```
-
-- Para llamar al procedimiento:
-
-```
-SELECT * FROM pg_proc WHERE proname = 'insertar_usuario';
-```
-
-- Para llamar al cursor de mostrar todos los usuarios:
-
-```
-SELECT mostrar_usuarios();
-```
-
-- Para insertar un nuevo usuario y activar el trigger:
-
-```
-INSERT INTO usuarios (nombre, correo_electronico, edad) VALUES ('Pedro', 'pedro@example.com', 25);
-```
-
