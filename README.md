@@ -123,13 +123,10 @@ Para probar todo lo enterior utilize los siguientes comandos:
 SELECT calcular_edad_promedio();
 ```
 
-![image](https://user-images.githubusercontent.com/91567318/234354010-c9999bc0-a737-43e1-a9c5-19c10afd1cc1.png)
-
-
-- Para llamar al procedimiento almacenado de insertar un nuevo usuario:
+- Para llamar al procedimiento:
 
 ```
-CALL insertar_usuario('Juan', 'juan@example.com', 30);
+SELECT * FROM pg_proc WHERE proname = 'insertar_usuario';
 ```
 
 - Para llamar al cursor de mostrar todos los usuarios:
@@ -143,8 +140,4 @@ SELECT mostrar_usuarios();
 ```
 INSERT INTO usuarios (nombre, correo_electronico, edad) VALUES ('Pedro', 'pedro@example.com', 25);
 ```
-
-![image](https://user-images.githubusercontent.com/91567318/234355537-ae7d80e6-59cb-4f02-ad9b-1af84f5d348f.png)
-
-
 
