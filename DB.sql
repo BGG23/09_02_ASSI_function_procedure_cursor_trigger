@@ -1,7 +1,7 @@
 CREATE DATABASE DB;
 
 CREATE TABLE usuarios (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   nombre VARCHAR(50),
   correo_electronico VARCHAR(50),
   edad INTEGER
@@ -34,10 +34,10 @@ $$ LANGUAGE plpgsql;
 
 -- procedimiento
 
-CREATE PROCEDURE insertar_usuario(nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
+CREATE PROCEDURE insertar_usuario(id INTEGER, nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
 AS $$
 BEGIN
-  INSERT INTO usuarios (nombre, correo_electronico, edad) VALUES (nombre, correo_electronico, edad);
+  INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (id, nombre, correo_electronico, edad);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -53,7 +53,7 @@ BEGIN
   LOOP
     FETCH cursor_usuarios INTO usuario;
     EXIT WHEN NOT FOUND;
-    RAISE NOTICE 'Usuario %: %, % años', usuario.id, usuario.nombre, usuario.edad;
+    RAISE NOTICE 'Usuario %: %, %, % años', usuario.id, usuario.nombre,  usuario.correo_electronico, usuario.edad;
   END LOOP;
   CLOSE cursor_usuarios;
 END;
