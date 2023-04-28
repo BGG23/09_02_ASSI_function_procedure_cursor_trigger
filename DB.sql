@@ -7,7 +7,7 @@ CREATE TABLE usuarios (
   edad INTEGER
 );
 
--- insertar datos
+-- INSERT
 
 INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (1, 'Juan', 'juan@example.com', 30);
 INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (2, 'Ana', 'ana@example.com', 25);
@@ -20,7 +20,7 @@ INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (8, 'Carla', 
 INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (9, 'Andrés', 'andres@example.com', 31);
 INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (10, 'Marta', 'marta@example.com', 26);
 
--- funcion
+-- FUNCTION
 
 CREATE FUNCTION calcular_edad_promedio()
 RETURNS INTEGER AS $$
@@ -32,34 +32,24 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- procedimiento
+-- PROCEDURE
 
-CREATE PROCEDURE insertar_usuario(id INTEGER, nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
+CREATE PROCEDURE insertar_usuario(nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
 AS $$
 BEGIN
-  INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (id, nombre, correo_electronico, edad);
+  INSERT INTO usuarios (nombre, correo_electronico, edad) VALUES (nombre, correo_electronico, edad);
 END;
 $$ LANGUAGE plpgsql;
 
--- cursor
+-- CURSOR
 
-CREATE OR REPLACE FUNCTION mostrar_usuarios()
-RETURNS VOID AS $$
-DECLARE
-  usuario usuarios%ROWTYPE;
-  cursor_usuarios CURSOR FOR SELECT * FROM usuarios;
-BEGIN
-  OPEN cursor_usuarios;
-  LOOP
-    FETCH cursor_usuarios INTO usuario;
-    EXIT WHEN NOT FOUND;
-    RAISE NOTICE 'Usuario %: %, %, % años', usuario.id, usuario.nombre,  usuario.correo_electronico, usuario.edad;
-  END LOOP;
-  CLOSE cursor_usuarios;
-END;
-$$ LANGUAGE plpgsql;
+BEGIN;
+DECLARE cursor_usuarios CURSOR FOR
+SELECT nombre, correo_electronico, edad
+FROM usuarios;
 
--- trigger
+-- TRIGGER
+
 CREATE OR REPLACE FUNCTION mostrar_mensaje() 
 RETURNS TRIGGER AS $$
 BEGIN
