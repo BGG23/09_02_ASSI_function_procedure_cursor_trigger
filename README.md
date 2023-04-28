@@ -13,15 +13,12 @@ CREATE DATABASE DB;
 
 ```
 CREATE TABLE usuarios (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   nombre VARCHAR(50),
   correo_electronico VARCHAR(50),
   edad INTEGER
 );
 ```
-
-![image](https://user-images.githubusercontent.com/91567318/234351027-89ced80f-d8b9-46c4-b681-6aa8810fc8be.png)
-
 
 3. Introduzca los datos de los usuarios de la tabla anterior:
 
@@ -38,9 +35,6 @@ INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (9, 'Andrés'
 INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (10, 'Marta', 'marta@example.com', 26);
 
 ```
-
-![image](https://user-images.githubusercontent.com/91567318/234353750-1a40cc6f-3469-42e2-ab7e-bf97cf0bf06e.png)
-
 
 4. Cree una función que calcule la edad promedio de los usuarios de la tabla:
 ```
@@ -61,10 +55,10 @@ $$ LANGUAGE plpgsql;
 5. Cree un procedimiento almacenado que inserte un nuevo usuario en la tabla:
 
 ```
-CREATE PROCEDURE insertar_usuario(nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
+CREATE PROCEDURE insertar_usuario(id INTEGER, nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
 AS $$
 BEGIN
-  INSERT INTO usuarios (nombre, correo_electronico, edad) VALUES (nombre, correo_electronico, edad);
+  INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (id, nombre, correo_electronico, edad);
 END;
 $$ LANGUAGE plpgsql;
 ```
