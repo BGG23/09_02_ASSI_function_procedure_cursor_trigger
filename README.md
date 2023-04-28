@@ -1,4 +1,4 @@
-# 09_02_ASSI_function_procedure_cursor_trigger
+# Practica realizada en PgAdmin con Function, Procedure, Cursor y Trigger
 ### Belén Gamero Garcia y Edgar López Hernández
 
 ## Crear un proyecto en pgAdmin con PostgreSQL
@@ -37,6 +37,7 @@ INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (10, 'Marta',
 ```
 
 4. Cree una función que calcule la edad promedio de los usuarios de la tabla:
+
 ```
 CREATE FUNCTION calcular_edad_promedio()
 RETURNS INTEGER AS $$
@@ -107,7 +108,6 @@ SELECT calcular_edad_promedio();
 
 ![image](https://user-images.githubusercontent.com/91567318/235224100-ad9cea26-dbf7-45fe-aafe-c6bcd911d298.png)
 
-
 - Para llamar al procedimiento almacenado de insertar un nuevo usuario:
 
 ```
@@ -115,7 +115,6 @@ CALL insertar_usuario ('Neus', 'Neus@example.com', 15);
 ```
 
 ![image](https://user-images.githubusercontent.com/91567318/235223926-a89e52e8-07a1-4b47-9402-9cdea096f424.png)
-
 
 - Para llamar al cursor de mostrar todos los usuarios:
 
@@ -126,12 +125,12 @@ FETCH ALL IN cursor_usuarios;
 ![image](https://user-images.githubusercontent.com/91567318/235226366-ab81db2b-1de4-4f68-979e-169a4aeaf22c.png)
 
 y para salir ponemos un commit
+
 ```
 COMMIT;
 ```
 
 ![image](https://user-images.githubusercontent.com/91567318/235226729-ec43e54c-4923-49ee-9221-c4bc4e4b8879.png)
-
 
 - Para insertar un nuevo usuario y activar el trigger:
 
