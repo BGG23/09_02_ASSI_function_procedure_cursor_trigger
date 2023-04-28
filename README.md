@@ -55,10 +55,10 @@ $$ LANGUAGE plpgsql;
 5. Cree un procedimiento almacenado que inserte un nuevo usuario en la tabla:
 
 ```
-CREATE PROCEDURE insertar_usuario(id INTEGER, nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
+CREATE PROCEDURE insertar_usuario(nombre VARCHAR(50), correo_electronico VARCHAR(50), edad INTEGER)
 AS $$
 BEGIN
-  INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (id, nombre, correo_electronico, edad);
+  INSERT INTO usuarios (nombre, correo_electronico, edad) VALUES (nombre, correo_electronico, edad);
 END;
 $$ LANGUAGE plpgsql;
 ```
@@ -69,24 +69,13 @@ $$ LANGUAGE plpgsql;
 6. Cree un cursor que recorra todos los usuarios de la tabla y los muestre:
 
 ```
-CREATE OR REPLACE FUNCTION mostrar_usuarios()
-RETURNS VOID AS $$
-DECLARE
-  usuario usuarios%ROWTYPE;
-  cursor_usuarios CURSOR FOR SELECT * FROM usuarios;
-BEGIN
-  OPEN cursor_usuarios;
-  LOOP
-    FETCH cursor_usuarios INTO usuario;
-    EXIT WHEN NOT FOUND;
-    RAISE NOTICE 'Usuario %: %, % años', usuario.id, usuario.nombre, usuario.edad;
-  END LOOP;
-  CLOSE cursor_usuarios;
-END;
-$$ LANGUAGE plpgsql;
+BEGIN;
+DECLARE cursor_usuarios CURSOR FOR
+SELECT nombre, correo_electronico, edad
+FROM usuarios;
 ```
 
-![image](https://user-images.githubusercontent.com/91567318/234351782-4dc7e720-476a-44ff-85c6-243d81abd609.png)
+![image](https://user-images.githubusercontent.com/91567318/235225531-4a1ad1da-a14d-4cb3-97d4-9053945c359a.png)
 
 
 7. Cree un trigger que se active cada vez que se inserte un nuevo usuario en la tabla y muestre un mensaje en la consola:
@@ -116,20 +105,41 @@ EXECUTE FUNCTION mostrar_mensaje();
 SELECT calcular_edad_promedio();
 ```
 
+![image](https://user-images.githubusercontent.com/91567318/235224100-ad9cea26-dbf7-45fe-aafe-c6bcd911d298.png)
+
+
 - Para llamar al procedimiento almacenado de insertar un nuevo usuario:
 
 ```
-CALL insertar_usuario(1, 'Juan', 'juan@example.com', 30);
+CALL insertar_usuario ('Neus', 'Neus@example.com', 15);
 ```
+
+![image](https://user-images.githubusercontent.com/91567318/235223926-a89e52e8-07a1-4b47-9402-9cdea096f424.png)
+
 
 - Para llamar al cursor de mostrar todos los usuarios:
 
 ```
-SELECT mostrar_usuarios();
+FETCH ALL IN cursor_usuarios;
 ```
+
+![image](https://user-images.githubusercontent.com/91567318/235226366-ab81db2b-1de4-4f68-979e-169a4aeaf22c.png)
+
+y para salir ponemos un commit
+```
+COMMIT;
+```
+
+![image](https://user-images.githubusercontent.com/91567318/235226729-ec43e54c-4923-49ee-9221-c4bc4e4b8879.png)
+
 
 - Para insertar un nuevo usuario y activar el trigger:
 
 ```
 INSERT INTO usuarios (id, nombre, correo_electronico, edad) VALUES (15, 'Pedro', 'pedro@example.com', 25);
 ```
+
+![image](https://user-images.githubusercontent.com/91567318/235226929-27235585-c787-4250-a5b1-e59b334906a0.png)
+
+
+
